@@ -1,0 +1,9 @@
+interface:
+  display_name: "Word Math Doctor"
+  short_description: "扫描、裁定并修复可编辑的 Word 原生数学公式。"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#245B9B"
+  default_prompt: "使用 $word-math-doctor 扫描这份 Word 文档中的数学公式问题，不修改原稿。"
+policy:
+  allow_implicit_invocation: true

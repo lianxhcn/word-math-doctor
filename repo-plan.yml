@@ -1,0 +1,36 @@
+project_title: "Word Math Doctor：Word 原生公式校验与转换 Skill"
+repository_mode: single
+recommendation: single
+decision_reason: "该 Skill 有独立名称、版本、安装入口、模板与可维护的扫描脚本，可供不同论文和课程项目长期复用；与某一篇推文或系列材料无关。"
+confidence: high
+
+local_root: "D:/github_lianxh"
+project_path: "D:/github_lianxh/word-math-doctor"
+work_scope: "维护 Word 原生 OMML 公式的扫描、裁定、返修、审计与安装说明；不包含任何用户文稿、数据或凭据。"
+series_key: ""
+
+repository_name: "word-math-doctor"
+remote_owner: lianxhcn
+visibility: public
+license: CC-BY-NC-4.0
+release_version: "0.2.0-beta"
+public_history: "以不含旧名称和内部版本记录的干净初始提交发布。"
+
+github_pages:
+  required: false
+  source: ""
+  expected_url: ""
+
+preflight:
+  readme_required: true
+  ignore_checked: true
+  sensitive_content_checked: true
+  large_files_checked: true
+  minimal_verification: "运行 Skill 与插件静态校验；运行 OOXML 扫描器单元测试；验证 Skills CLI 可发现并安装；检查敏感内容、审计日志隐私和公开文件清单。"
+
+approval:
+  create_remote: true
+  commit: true
+  push: true
+
+notes: "GitHub 仓库用于公开源代码与本地 Codex 安装。推荐通过 npx skills add 直接安装；skills.sh 的自动收录不是安装前提，也不承诺即时出现。插件目录提交、GitHub Pages 与用户文稿上传均不在本次范围内。"

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Word equation skill">
+  <rect width="64" height="64" rx="14" fill="#245B9B"/>
+  <path d="M14 17h35M14 47h35M18 22l12 10-12 10M46 22L34 32l12 10" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+  <path d="M28 24h8M28 40h8" fill="none" stroke="#9fd2ff" stroke-linecap="round" stroke-width="3"/>
+</svg>
