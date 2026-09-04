@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.docx
+*.docm
+*.pdf
+~$*.docx
+audit-*.json
+*-audit.json
+*_audit.json
+audits/
+*.tmp
+.DS_Store
