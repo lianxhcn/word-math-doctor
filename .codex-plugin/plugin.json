@@ -1,0 +1,37 @@
+{
+  "name": "word-math-doctor",
+  "version": "0.2.0-beta",
+  "description": "Audit and repair editable Word OMML equations while protecting mathematical meaning and document layout.",
+  "author": {
+    "name": "连享会",
+    "url": "https://www.lianxh.cn"
+  },
+  "homepage": "https://github.com/lianxhcn/word-math-doctor",
+  "repository": "https://github.com/lianxhcn/word-math-doctor",
+  "license": "CC-BY-NC-4.0",
+  "keywords": [
+    "Word",
+    "OMML",
+    "Cambria Math",
+    "equation",
+    "document-review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Word Math Doctor",
+    "shortDescription": "扫描、裁定并修复可编辑的 Word 原生数学公式。",
+    "longDescription": "扫描、裁定和修复已有 Word 文档中的 OMML 数学公式，保护数学含义、正文、表格和整体版式；当前为公开 beta 版本。",
+    "developerName": "连享会",
+    "category": "Productivity",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/lianxhcn/word-math-doctor",
+    "defaultPrompt": [
+      "使用 $word-math-doctor 扫描这份 Word 文档中的数学公式问题，不修改原稿。",
+      "使用 $word-math-doctor 根据已确认的 checklist 修复公式，并扫描全文同类问题。",
+      "使用 $word-math-doctor 对这份 Word 文档进行全文 OMML 规范化与独立验收。"
+    ],
+    "brandColor": "#245B9B"
+  }
+}
