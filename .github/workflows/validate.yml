@@ -30,5 +30,8 @@ jobs:
       - name: Check scanner command line interface
         run: python skills/word-math-doctor/scripts/scan_docx_math.py --help
 
-      - name: Check Skills CLI discovery
-        run: npx --yes skills add . --list
+      # This query downloads a third-party CLI at runtime.  Keep it advisory so
+      # a transient npm outage cannot mask the deterministic package tests.
+      - name: Check Skills CLI discovery (network-dependent)
+        continue-on-error: true
+        run: timeout 60s npx --yes skills add . --list
