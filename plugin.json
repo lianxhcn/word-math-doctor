@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "word-math-doctor",
+  "version": "0.3.0-beta",
+  "description": "Audit and repair editable Word mathematical expressions within an explicitly authorized scope.",
+  "author": {
+    "name": "连享会",
+    "url": "https://www.lianxh.cn"
+  },
+  "homepage": "https://github.com/lianxhcn/word-math-doctor",
+  "repository": "https://github.com/lianxhcn/word-math-doctor",
+  "license": "CC-BY-NC-4.0",
+  "keywords": ["Word", "OMML", "equation", "document-review", "academic-writing"]
+}
