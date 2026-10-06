@@ -2,7 +2,7 @@
 
 面向既有 Word 文档数学表达式的可复用 Agent Skill。它先做只读审计和作者裁定，再在明确授权的范围内修复为可编辑的 Word 原生 OMML；同时保护数学含义、正文、表格和版式。
 
-当前版本：**v0.3.0-beta**。
+当前版本：**v0.4.0-beta**。
 
 ## 适用范围
 
@@ -71,6 +71,36 @@ $word-math-doctor 对指定章节做 OMML 规范化；先确认范围、备份�
 python skills/word-math-doctor/scripts/scan_docx_math.py manuscript.docx --output audits/manuscript-audit.json
 ```
 
+对已经逐项审核的公式，使用受限修复工具。它不会自动猜测公式；计划中的 `expected_text` 与原段落不一致时会停止，原稿也不会被覆盖。独立公式编号使用居中/右对齐制表位，而不是空格填充。
+
+```bash
+python skills/word-math-doctor/scripts/repair_docx_math.py manuscript.docx reviewed-plan.json manuscript-revised.docx --report repair-report.json
+```
+
+`reviewed-plan.json` 的最小示例：
+
+```json
+{
+  "schema": "word-math-doctor/repair-plan/v1",
+  "operations": [
+    {
+      "paragraph": 12,
+      "action": "display",
+      "expected_text": "∫₀¹ x² dx = 1/3                                      (1)",
+      "number": "(1)",
+      "formula": {
+        "kind": "integral",
+        "lower": "0",
+        "upper": "1",
+        "body": [{"kind": "text", "value": "x dx"}]
+      }
+    }
+  ]
+}
+```
+
+默认保留化学式(如 `H₂O`、`CO₂`)为可编辑文本。只有作者明确提出化学排版目标时，才将其纳入修复范围。
+
 默认不要公开审计 JSON、原稿、批注、路径或片段；这些材料可能泄露未公开文稿信息。
 
 ## 验证
@@ -78,6 +108,7 @@ python skills/word-math-doctor/scripts/scan_docx_math.py manuscript.docx --outpu
 ```bash
 python -m unittest discover -s tests -v
 python skills/word-math-doctor/scripts/scan_docx_math.py --help
+python skills/word-math-doctor/scripts/repair_docx_math.py --help
 npx skills add . --list
 ```
 
