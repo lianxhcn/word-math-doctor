@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import tempfile
 import unittest
 import zipfile
@@ -17,12 +18,13 @@ SPEC.loader.exec_module(repair_docx_math)
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 NS = {"w": W, "m": M}
 
 
 def make_docx(path: Path) -> None:
     document = f'''<?xml version="1.0" encoding="UTF-8"?>
-<w:document xmlns:w="{W}"><w:body>
+<w:document xmlns:w="{W}" xmlns:mc="{MC}" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" mc:Ignorable="w14 wp14"><w:body>
   <w:p><w:r><w:t>勾股关系：x² + y² = z²。</w:t></w:r></w:p>
   <w:p><w:r><w:t>∫₀¹ x² dx = 1/3                                      (1)</w:t></w:r></w:p>
   <w:p><w:r><w:t>化学式 H₂O 和 CO₂ 保持为可编辑文本。</w:t></w:r></w:p>
@@ -103,7 +105,12 @@ class RepairDocxMathTests(unittest.TestCase):
                 self.assertEqual(
                     original.read("customXml/item1.xml"), converted.read("customXml/item1.xml")
                 )
-                root = ET.fromstring(converted.read("word/document.xml"))
+                document_xml = converted.read("word/document.xml")
+                root = ET.fromstring(document_xml)
+            root_start = re.search(rb"<w:document\b[^>]*>", document_xml).group(0)
+            self.assertIn(b'xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"', root_start)
+            self.assertIn(b'xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"', root_start)
+            self.assertIn(b'mc:Ignorable="w14 wp14"', root_start)
             paragraphs = list(root.iter(f"{{{W}}}p"))
             self.assertEqual(len(root.findall(".//m:oMath", NS)), 2)
             self.assertEqual(len(paragraphs[1].findall("./w:r/w:tab", NS)), 2)
