@@ -1,0 +1,21 @@
+{
+  "name": "lianxhcn-agent-skills",
+  "interface": {
+    "displayName": "连享会 Agent Skills"
+  },
+  "plugins": [
+    {
+      "name": "word-math-doctor",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/lianxhcn/word-math-doctor.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
