@@ -23,9 +23,11 @@ from xml.etree import ElementTree as ET
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
 NS = {"w": W, "m": M}
 ET.register_namespace("w", W)
 ET.register_namespace("m", M)
+ET.register_namespace("mc", MC)
 
 
 class PlanError(ValueError):
@@ -242,6 +244,34 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def preserve_root_namespace_declarations(source_xml: bytes, serialized_xml: bytes) -> bytes:
+    """Restore source namespace declarations that ElementTree discards.
+
+    Word documents routinely declare Office compatibility namespaces on the
+    document root, including prefixes referenced only by ``mc:Ignorable``.
+    ElementTree removes apparently unused declarations during serialization.
+    That creates a DOCX LibreOffice may tolerate but Word can reject because
+    ``mc:Ignorable`` then names unbound prefixes.  Keep every declaration from
+    the source root unless the serializer already emitted it.
+    """
+    source_match = re.search(rb"<w:document\b[^>]*>", source_xml)
+    output_match = re.search(rb"<w:document\b[^>]*>", serialized_xml)
+    if source_match is None or output_match is None:
+        raise PlanError("无法读取 word/document.xml 的根命名空间声明")
+    source_root = source_match.group(0)
+    output_root = output_match.group(0)
+    declarations = re.findall(rb"\s+xmlns(?::[A-Za-z_][\w.-]*)?=(?:\"[^\"]*\"|'[^']*')", source_root)
+    missing = []
+    for declaration in declarations:
+        name = declaration.lstrip().split(b"=", 1)[0]
+        if not re.search(re.escape(name) + rb"=", output_root):
+            missing.append(declaration)
+    if not missing:
+        return serialized_xml
+    replacement = output_root[:-1] + b"".join(missing) + b">"
+    return serialized_xml[: output_match.start()] + replacement + serialized_xml[output_match.end() :]
+
+
 def validate_plan(plan: Any) -> list[dict[str, Any]]:
     if not isinstance(plan, dict) or plan.get("schema") != "word-math-doctor/repair-plan/v1":
         raise PlanError("repair plan 的 schema 必须是 word-math-doctor/repair-plan/v1")
@@ -277,7 +307,9 @@ def repair(input_path: Path, plan_path: Path, output_path: Path, report_path: Pa
         before_omml = len(root.findall(".//m:oMath", NS))
         applied = [apply_operation(paragraphs, operation) for operation in operations]
         after_omml = len(root.findall(".//m:oMath", NS))
-        serialized = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+        serialized = preserve_root_namespace_declarations(
+            document_xml, ET.tostring(root, encoding="utf-8", xml_declaration=True)
+        )
         with zipfile.ZipFile(output_path, "x", compression=zipfile.ZIP_DEFLATED) as output:
             for info in archive.infolist():
                 data = serialized if info.filename == "word/document.xml" else archive.read(info.filename)
