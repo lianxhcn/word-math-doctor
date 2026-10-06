@@ -1,0 +1,16 @@
+{
+  "name": "lianxhcn-agent-skills",
+  "description": "公开的 Word 文档与数学公式审计 Agent Skills。",
+  "owner": {
+    "name": "连享会",
+    "url": "https://github.com/lianxhcn"
+  },
+  "plugins": [
+    {
+      "name": "word-math-doctor",
+      "source": "./",
+      "description": "Audit and repair editable Word mathematical expressions within an explicitly authorized scope.",
+      "version": "0.3.0-beta"
+    }
+  ]
+}
