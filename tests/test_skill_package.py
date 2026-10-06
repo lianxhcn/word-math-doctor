@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_FILE = ROOT / "skills" / "word-math-doctor" / "SKILL.md"
-EXPECTED_VERSION = "0.4.0-beta"
+EXPECTED_VERSION = "0.4.2-beta"
 
 
 class SkillPackageTests(unittest.TestCase):
