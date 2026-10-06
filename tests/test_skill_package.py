@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_FILE = ROOT / "skills" / "word-math-doctor" / "SKILL.md"
-EXPECTED_VERSION = "0.3.0-beta"
+EXPECTED_VERSION = "0.4.0-beta"
 
 
 class SkillPackageTests(unittest.TestCase):
@@ -45,6 +45,7 @@ class SkillPackageTests(unittest.TestCase):
             (ROOT / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
         )
         self.assertEqual(claude_marketplace["plugins"][0]["name"], "word-math-doctor")
+        self.assertEqual(claude_marketplace["plugins"][0]["version"], EXPECTED_VERSION)
 
     def test_readme_documents_supported_install_paths(self) -> None:
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
