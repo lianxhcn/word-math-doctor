@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "word-math-doctor",
-  "version": "0.4.0-beta",
+  "version": "0.4.2-beta",
   "description": "Audit and repair editable Word mathematical expressions within an explicitly authorized scope.",
   "author": {
     "name": "连享会",

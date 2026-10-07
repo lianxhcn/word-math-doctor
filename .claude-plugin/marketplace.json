@@ -10,7 +10,7 @@
       "name": "word-math-doctor",
       "source": "./",
       "description": "Audit and repair editable Word mathematical expressions within an explicitly authorized scope.",
-      "version": "0.4.0-beta"
+      "version": "0.4.2-beta"
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 面向既有 Word 文档数学表达式的可复用 Agent Skill。它先做只读审计和作者裁定，再在明确授权的范围内修复为可编辑的 Word 原生 OMML；同时保护数学含义、正文、表格和版式。
 
-当前版本：**v0.4.0-beta**。
+当前版本：**v0.4.2-beta** (待 Microsoft Word 侧验收的测试版)。
 
 ## 适用范围
 
@@ -73,6 +73,8 @@ python skills/word-math-doctor/scripts/scan_docx_math.py manuscript.docx --outpu
 
 对已经逐项审核的公式，使用受限修复工具。它不会自动猜测公式；计划中的 `expected_text` 与原段落不一致时会停止，原稿也不会被覆盖。独立公式编号使用居中/右对齐制表位，而不是空格填充。
 
+脚本只替换目标段落的 XML 字节范围，保留根命名空间及其余正文；行内公式前后文字保留 run 格式，编号继承原字体/字号/字符样式并设正体。独立公式按所在节实际版心计算制表位。当前仅自动处理普通纯文本正文；表格、非零缩进、分栏、既有制表位、书签、批注、域、修订等复杂目标会停止并提示人工处理。docm 仅可审计。
+
 ```bash
 python skills/word-math-doctor/scripts/repair_docx_math.py manuscript.docx reviewed-plan.json manuscript-revised.docx --report repair-report.json
 ```
@@ -87,19 +89,21 @@ python skills/word-math-doctor/scripts/repair_docx_math.py manuscript.docx revie
       "paragraph": 12,
       "action": "display",
       "expected_text": "∫₀¹ x² dx = 1/3                                      (1)",
+      "source_formula": "∫₀¹ x² dx = 1/3",
       "number": "(1)",
-      "formula": {
-        "kind": "integral",
-        "lower": "0",
-        "upper": "1",
-        "body": [{"kind": "text", "value": "x dx"}]
-      }
+      "formula": [
+        {"kind": "integral", "lower": "0", "upper": "1", "body": {"kind": "sup", "base": "x", "exponent": "2"}},
+        " dx = ",
+        {"kind": "fraction", "numerator": "1", "denominator": "3"}
+      ]
     }
   ]
 }
 ```
 
 默认保留化学式(如 `H₂O`、`CO₂`)为可编辑文本。只有作者明确提出化学排版目标时，才将其纳入修复范围。
+
+作者明确指定模板时，可在 display 操作增加 `"number_style": {"font": "Times New Roman", "size_half_points": 24}` (12 pt)；未指定时继承文档格式。结构测试和 LibreOffice 渲染不等于 Word 验收。脚本不测量实际公式宽度，长公式碰撞、裁切、字体替代及跨页均须在 Microsoft Word 中打开、编辑、另存和重开确认。
 
 默认不要公开审计 JSON、原稿、批注、路径或片段；这些材料可能泄露未公开文稿信息。
 
